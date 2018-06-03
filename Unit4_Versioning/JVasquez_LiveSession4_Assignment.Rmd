@@ -1,0 +1,107 @@
+---
+title: "Unit 4 Assignment - Versioning"
+author: "James Vasquez"
+date: "May 23, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+###### MSDS 6306: Doing Data Science
+###### Thursday 6:30 - 8pm
+
+1.   FiveThirtyEight data package
+    a.   Install the 'fivethirtyeight' package: 'install.packages("fivethirtyeight")'
+```{r install538, echo=FALSE}
+library(fivethirtyeight)
+library(plyr)
+library(dplyr)
+library(vcdExtra)
+library(data.table)
+library(urltools)
+library(ggplot2)
+```
+
+1.   FiveThirtyEight data package
+    b.   Assign 22nd data set to object called 'df'
+```{r Assign df, echo=TRUE}
+#Find the 18th data set in 538
+DataSet18 <- tail(as.data.frame(head(vcdExtra::datasets("fivethirtyeight"), 22)),1)
+DataSet18
+
+#set the 18th data set to a data frame called df
+df <- as.data.frame(college_recent_grads)
+```
+
+1.   FiveThirtyEight data package
+    c.   Comment the URL for the 22nd data set
+```{r df URL, echo=TRUE}
+#Show URL for Data Set 18
+DataSet18_address <- url_parse("https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/")
+url_compose(DataSet18_address)
+```
+
+1.   FiveThirtyEight data package
+    d.   Give the dimensions for the 22nd data set
+```{r dim_df, echo=TRUE}
+#Dimensions for df
+dim(df)
+
+#Column names listed vertically
+df_ColNames <- matrix(colnames(df))
+colnames(df_ColNames) <- c("col_name")
+df_ColNames
+```
+
+2.   FiveThirtyEight Data Summary
+    a.   List column names and number of columns in the data frame
+```{r colnames_and_count_columns, echo=TRUE}
+#List column names vertically
+df_ColNames <- matrix(colnames(df))
+colnames(df_ColNames) <- c("col_name")
+df_ColNames
+
+#Count number of columns in data frame
+ncol(df)
+```
+
+2.   FiveThirtyEight Data Summary
+    b.   Generate countof each unique 'major_category'
+```{r major_count, echo=TRUE}
+Major_Count <- as.data.frame(df %>% group_by(major_category) %>% summarize(count=n()))
+Major_Count <- Major_Count[complete.cases(Major_Count),]
+Major_Count <- Major_Count[order(Major_Count$count,decreasing=TRUE),c(1,2)]
+Major_Count
+```
+
+2.   FiveThirtyEight Data Summary
+    c.   Plot 'Major_Count' as horizontal bar plots with different color
+```{r major_count_BarPlot, echo=TRUE}
+Major_CountBarPlot <- ggplot(data=Major_Count, 
+                             aes(x=reorder(major_category, count),
+                             y=count,
+                             fill=major_category)) + 
+                             geom_bar(stat="identity") +
+                             coord_flip() +
+                             labs(x="Majors", 
+                                  y="Number of occurence", 
+                                  title = "Occurence counts of Majors")
+#Show bar plot
+Major_CountBarPlot
+```
+
+2.   FiveThirtyEight Data Summary
+    d.   write df to CSV file
+```{r write_CSV_file, echo=TRUE}
+write.csv(df, "college_recent_grads.csv", row.names = FALSE)
+```
+
+
+
+
+###Session Information
+```{r session, echo=FALSE}
+sessionInfo()
+
+```

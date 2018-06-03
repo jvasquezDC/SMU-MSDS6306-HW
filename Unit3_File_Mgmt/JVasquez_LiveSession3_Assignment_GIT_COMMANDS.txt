@@ -1,0 +1,8 @@
+1  cd Documents/
+MSDS_6306_Doing_Data_Science/  
+2  mkdir gitprojects
+   
+3  cd gitprojects  
+4  git clone https://github.com/awesomedata/awesome-public-datasets.git
+     
+5  history > history.txt

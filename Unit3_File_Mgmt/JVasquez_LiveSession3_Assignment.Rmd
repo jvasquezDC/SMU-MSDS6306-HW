@@ -1,0 +1,132 @@
+---
+title: "Unit 3 Assignment - File Management"
+author: "James Vasquez"
+date: "May 23, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+###### MSDS 6306: Doing Data Science
+###### Thursday 6:30 - 8pm
+
+
+1.   In R read in titanic.csv via  either read.table()  or read.csv(), assigning  it  to  df.    This  dataset  follows  the  passengers  aboard  the  Titanic,  including  their  fees  paid,  rooms  rented,  and  survivorship  status.
+
+```{r Read Titanic Data, echo=TRUE}
+library(plyr)
+
+#Set working directory
+TitanicDIR <- setwd("C:/Users/James/Documents/SMU/MSDS_6306_Doing_Data_Science/gitprojects/awesome-public-datasets/Datasets/titanic/")
+
+#Read CSV file into R
+TitanicData <- read.csv("titanic.csv", header=TRUE, sep=",")
+MatrixTitanicData <- matrix(TitanicData)
+
+#check data table class
+class(TitanicData)
+class(MatrixTitanicData)
+```
+
+2. Frequencies and graphs output
+  i) count  of  females  and  males  
+  i) Plot  the  frequency  of  females  and  males.    
+    A.   Be  sure  to  give  an  accurate  title  and  label  the  axes
+
+```{r Gender Frequency, echo=TRUE}
+#Get frequency table of the Sex column
+SexFreq <- count(TitanicData, 'Sex')
+countsSEX <- table(TitanicData$Sex)
+
+#show results
+SexFreq
+countsSEX
+
+#Make bar chart
+barplot(countsSEX, 
+        main="Gender Frequency Count", 
+        xlab="Gender",
+        ylab = "Counts",
+        col = c("darkblue"))
+```
+
+3. Please  use  one  apply  function to output (values should be real numbers): 
+i. Mean  of  Age  
+i. Mean of fare 
+i. Mean of survival
+
+```{r Means, echo=TRUE}
+#Extract columns needed to find means
+AgeVector <- as.vector(TitanicData$Age)
+FareVector <- as.vector(TitanicData$Fare)
+SurvivalVector <- as.vector(TitanicData$Survived)
+
+#Combine vectors into matrix
+MATRIXAgeFareSurvived <- cbind(AgeVector, FareVector, SurvivalVector)
+
+#output means of Age, Fare, Survival. Output should be real number
+MeanAgeFareSurvived <- apply(MATRIXAgeFareSurvived, 2, mean, na.rm=TRUE)
+
+#shows output is numeric
+class(MeanAgeFareSurvived)
+
+#Show Means
+MeanAgeFareSurvived
+```
+
+4. Create function to do the following
+  i) Create objects for 
+    A.   Median age 
+    A.   Min duration sleep
+    A.   Max duration sleep 
+    A.   Mean RSES
+    A.   Standard deviation RSES
+  i) Create data frame called 'Report'
+    A.   Divide results by 5
+  i) Columns names should be
+    A.   MedianAge
+    A.   SelfEsteem
+    A.   SE_SD
+    A.   DurationRange
+  i) Round the report to 2 sig figs
+
+```{r Function Building, echo=TRUE}
+#Set sleep data working directory
+SleepDIR <- setwd("C:/Users/James/Documents/SMU/MSDS_6306_Doing_Data_Science/HW_Data/Unit3_File_Mgmt/")
+
+#Read CSV file into R
+SleepData <- read.csv("sleep_data_01.csv", header=TRUE, sep=",")
+
+HW3FileMgmt <- function(x) {
+
+  #create vectors
+  AgeVector <- as.vector(SleepData$Age)
+  DurationVector <- as.vector(SleepData$Duration)
+  RSESVector <- as.vector(SleepData$RSES)
+  
+  #Create metric objects
+  MedianAge <- mean(AgeVector, na.rm=TRUE)
+  DurationMin <- min(DurationVector, na.rm=TRUE)
+  DurationMax <- max(DurationVector, na.rm=TRUE)
+  SelfEsteem <- mean(RSESVector, na.rm=TRUE)
+  SE_SD <- sd(RSESVector, na.rm=TRUE)
+  
+  #Create data frame and divide results by 5, limit to 2 sig figs
+  Report <- round(data.frame(cbind(MedianAge, DurationMin, DurationMax, SelfEsteem, SE_SD))/5, digits = 2)
+  
+  return(Report)
+}
+```
+
+5. Function Results!!!!
+```{r Function Results, echo=TRUE}
+#function(data frame name)
+HW3FileMgmt(SleepData)
+```
+
+###Session Information
+```{r session, echo=FALSE}
+sessionInfo()
+
+```

@@ -1,0 +1,117 @@
+---
+title: "Unit 2 Assignment - Rmarkdown"
+author: "James Vasquez"
+date: "May 18, 2018"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+###### MSDS 6306: Doing Data Science
+###### Thursday 6:30 - 8pm
+
+1. What is  a  basic  workflow  for  reproducible  research?
+i) Data and code used to make findings are available and are sufficient for an independent party to re-create findings
+2. What are  five  practical  tips  for  making  research  reproducible?
+i) Document the code in detail
+i) Provide a general summary of what the code/study is trying to accomplish
+i) A well organized folder management system
+i) Using relative paths for documents
+i) List packages/libraries needed
+3. Give an  example  of  how  you  might  implement  each
+i) When documenting code, ensure each section that does something different is well documented.  Over documentation will not be an issue, infact it may save you time when you have to go back to the code.
+i) A general summary of what the study or task that your code is attempting to solve will better help you when you need to revisit your code.
+i) Having folders for your exports such as code, data, doc, figures, results can help keep you organized when making your deliverables.
+i) Using relative paths makes the code more portable for others
+i) Knowing all libraries and packages needed is definately a must as not all R & R Studio intallations will have the same packages installed
+4. Which one  of  these  do  you  think  will  be  the  most  difficult?
+i) In my own experience I find documentation the most difficult, as I work through code I am more focused on getting the job done rather than documenting the code.  
+
+###Airquality Data Scatter Plot 1 - 2a
+#####Below is a scatter plot and R code created from the 'airquality' data set that plots temperature vs. month.
+
+```{r TempVsMonth, echo=TRUE}
+#Plot airquality data
+#X -> dataTable$column
+#Y -> dataTable$column
+#main -> Title of graph
+#xlab -> X Label
+#ylab -> Y Label
+#pch -> symbol type
+#col -> color of symbol outline
+#bf -> color of infill of symbol
+#grid -> adds grid lines
+plot(x=airquality$Month, 
+     y=airquality$Temp, 
+     main="Temperature by Month", 
+     xlab="Month", 
+     ylab="Temperature",
+     pch=23, 
+     col="blue", 
+     bg="red")
+grid (NULL,NULL)
+```
+
+###Airquality Data Scatter Plot 2 - 2b
+#####Below is a scatter plot and R code created from the 'airquality' data set that plots temperature vs. ozone.
+
+```{r TempVsOzone, echo=TRUE}
+#Plot airquality data
+#X -> dataTable$column
+#Y -> dataTable$column
+#main -> Title of graph
+#xlab -> X Label
+#ylab -> Y Label
+#pch -> symbol type
+#col -> color of symbol outline
+#bf -> color of infill of symbol
+#grid -> adds grid lines
+plot(x=airquality$Temp, 
+     y=airquality$Ozone, 
+     main="Temperature vs Ozone", 
+     xlab="Temperature", 
+     ylab="Ozone",
+     pch=23, 
+     col="blue", 
+     bg="red")
+grid (NULL,NULL)
+```
+ 
+###Pressure Data Scatter Plot 1 - 3a
+#####Below is a scatter plot and R code created from the 'pressure' data set that plots temperature vs. pressure.
+
+```{r TempVsPressure, echo=TRUE}
+plot(x=pressure$pressure, 
+     y=pressure$temperature, 
+     main="Temperature vs Pressure", 
+     xlab="Pressure", 
+     ylab="Temperature",
+     pch=23, 
+     col="blue", 
+     bg="red")
+grid (NULL,NULL)
+```
+
+###Pressure Data Scatter Plot 2 - 3b
+#####Below is a scatter plot and R code created from the 'pressure' data set that plots pressure vs temperature.
+
+```{r TempVsPressure2, echo=TRUE}
+plot(x=pressure$temperature, 
+     y=pressure$pressure, 
+     main="Pressure vs Temperature", 
+     xlab="Temperature", 
+     ylab="Pressure",
+     pch=23, 
+     col="blue", 
+     bg="red")
+grid (NULL,NULL)
+```
+
+
+###Session Information
+```{r session, echo=FALSE}
+sessionInfo()
+
+```
