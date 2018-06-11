@@ -24,11 +24,14 @@ colnames(df)[colnames(df)=='V3'] <- 'Count_of_Name'
 ######   & Struture df
 ####################################
 
-#Get dimensions of table
-#Show dimensions
+#Get dimensions of df
 dim(df)
+#show class
 class(df)
+#show summary
 summary(df)
+#Show Structure of df
+str(df)
 
 
 ####################################

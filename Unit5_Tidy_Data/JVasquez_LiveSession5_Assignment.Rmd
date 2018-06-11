@@ -32,11 +32,14 @@ head(df,2)
 1.   Data Munging
     b.   Display summary and structure of 'df'
 ```{r DisplayStructure, echo=TRUE}
-#Get dimensions of table
-#Show dimensions
+#Get dimensions of df
 dim(df)
+#show class
 class(df)
+#show summary
 summary(df)
+#Show Structure of df
+str(df)
 ```
 
 1.   Data Munging
@@ -54,7 +57,9 @@ sqldf("Select *
     d.   Remove the misspelled names from the data and assign the table as 'y2016'
 ```{r munging, echo=TRUE}
 y2016 <- df[!(df$Name=="Fionayyy"),]
+#Show dimensions before row is deleted
 dim(df)
+#Show dimensions after row is deleted
 dim(y2016)
 ```
 

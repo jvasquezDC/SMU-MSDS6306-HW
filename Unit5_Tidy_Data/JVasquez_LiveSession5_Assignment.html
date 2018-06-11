@@ -161,13 +161,14 @@ head(df,2)</code></pre>
 <li>Display summary and structure of ‘df’</li>
 </ol></li>
 </ol>
-<pre class="r"><code>#Get dimensions of table
-#Show dimensions
+<pre class="r"><code>#Get dimensions of df
 dim(df)</code></pre>
 <pre><code>## [1] 32869     3</code></pre>
-<pre class="r"><code>class(df)</code></pre>
+<pre class="r"><code>#show class
+class(df)</code></pre>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
-<pre class="r"><code>summary(df)</code></pre>
+<pre class="r"><code>#show summary
+summary(df)</code></pre>
 <pre><code>##       Name       Gender    Count_of_Name    
 ##  Aalijah:    2   F:18758   Min.   :    5.0  
 ##  Aaliyan:    2   M:14111   1st Qu.:    7.0  
@@ -176,6 +177,12 @@ dim(df)</code></pre>
 ##  Aarin  :    2             3rd Qu.:   30.0  
 ##  Aaris  :    2             Max.   :19414.0  
 ##  (Other):32857</code></pre>
+<pre class="r"><code>#Show Structure of df
+str(df)</code></pre>
+<pre><code>## 'data.frame':    32869 obs. of  3 variables:
+##  $ Name         : Factor w/ 30295 levels &quot;Aaban&quot;,&quot;Aabha&quot;,..: 9317 22546 3770 26409 12019 20596 6185 339 9298 11222 ...
+##  $ Gender       : Factor w/ 2 levels &quot;F&quot;,&quot;M&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Count_of_Name: int  19414 19246 16237 16070 14722 14366 13030 11699 10926 10733 ...</code></pre>
 <ol style="list-style-type: decimal">
 <li>Data Munging
 <ol start="3" style="list-style-type: lower-alpha">
@@ -196,9 +203,11 @@ sqldf(&quot;Select *
 </ol></li>
 </ol>
 <pre class="r"><code>y2016 &lt;- df[!(df$Name==&quot;Fionayyy&quot;),]
+#Show dimensions before row is deleted
 dim(df)</code></pre>
 <pre><code>## [1] 32869     3</code></pre>
-<pre class="r"><code>dim(y2016)</code></pre>
+<pre class="r"><code>#Show dimensions after row is deleted
+dim(y2016)</code></pre>
 <pre><code>## [1] 32868     3</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Data Merging
