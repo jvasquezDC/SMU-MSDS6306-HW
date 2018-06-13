@@ -62,9 +62,13 @@ dim(y2016)
 ####################################
 
 y2015 <- read.table("yob2015.txt", header = FALSE, sep = ",", strip.white = TRUE)
+
+#rename column names
 colnames(y2015)[colnames(y2015)=='V1'] <- 'Name'
 colnames(y2015)[colnames(y2015)=='V2'] <- 'Gender'
 colnames(y2015)[colnames(y2015)=='V3'] <- 'Count_of_Name'
+
+#Show table
 head(y2015, 2)
 
 ####################################
@@ -90,6 +94,7 @@ final <- merge(y2015, y2016, by.x=c("Name","Gender"), by.y=c("Name","Gender"), a
 colnames(final)[colnames(final)=='Count_of_Name.x'] <- 'Count_of_Name_2015'
 colnames(final)[colnames(final)=='Count_of_Name.y'] <- 'Count_of_Name_2016'
 
+#Show table
 head(final, 2)
 
 ####################################
