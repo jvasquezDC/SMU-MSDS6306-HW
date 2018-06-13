@@ -148,6 +148,8 @@ library(proto)
 
 #Read in the yob2016.txt data set
 df &lt;- read.table(&quot;yob2016.txt&quot;, header = FALSE, sep = &quot;;&quot;, strip.white = TRUE)
+
+#Rename column names
 colnames(df)[colnames(df)=='V1'] &lt;- 'Name'
 colnames(df)[colnames(df)=='V2'] &lt;- 'Gender'
 colnames(df)[colnames(df)=='V3'] &lt;- 'Count_of_Name'
@@ -202,7 +204,9 @@ sqldf(&quot;Select *
 <li>Remove the misspelled names from the data and assign the table as ‘y2016’</li>
 </ol></li>
 </ol>
-<pre class="r"><code>y2016 &lt;- df[!(df$Name==&quot;Fionayyy&quot;),]
+<pre class="r"><code>#Delete mispelled name from data
+y2016 &lt;- df[!(df$Name==&quot;Fionayyy&quot;),]
+
 #Show dimensions before row is deleted
 dim(df)</code></pre>
 <pre><code>## [1] 32869     3</code></pre>
@@ -215,7 +219,10 @@ dim(y2016)</code></pre>
 <li>Import ‘yob2015.txt’ and assign column names and assign as ‘y2015’</li>
 </ol></li>
 </ol>
-<pre class="r"><code>y2015 &lt;- read.table(&quot;yob2015.txt&quot;, header = FALSE, sep = &quot;,&quot;, strip.white = TRUE)
+<pre class="r"><code>#Read in yob2015.txt
+y2015 &lt;- read.table(&quot;yob2015.txt&quot;, header = FALSE, sep = &quot;,&quot;, strip.white = TRUE)
+
+#Rename column names
 colnames(y2015)[colnames(y2015)=='V1'] &lt;- 'Name'
 colnames(y2015)[colnames(y2015)=='V2'] &lt;- 'Gender'
 colnames(y2015)[colnames(y2015)=='V3'] &lt;- 'Count_of_Name'
@@ -229,7 +236,8 @@ head(y2015, 2)</code></pre>
 <li>Display last 10 rows of ‘y2015’ and describe what you see</li>
 </ol></li>
 </ol>
-<pre class="r"><code>tail(y2015,10)</code></pre>
+<pre class="r"><code>#Display last 10 rows
+tail(y2015,10)</code></pre>
 <pre><code>##         Name Gender Count_of_Name
 ## 33054   Ziyu      M             5
 ## 33055   Zoel      M             5
@@ -255,6 +263,7 @@ final &lt;- merge(y2015, y2016, by.x=c(&quot;Name&quot;,&quot;Gender&quot;), by.
 colnames(final)[colnames(final)=='Count_of_Name.x'] &lt;- 'Count_of_Name_2015'
 colnames(final)[colnames(final)=='Count_of_Name.y'] &lt;- 'Count_of_Name_2016'
 
+#Show table
 head(final, 2)</code></pre>
 <pre><code>##    Name Gender Count_of_Name_2015 Count_of_Name_2016
 ## 1 Aaban      M                 15                  9
@@ -281,7 +290,8 @@ final &lt;- sqldf(&quot;Select
 sqldf(&quot;Select SUM(Count_of_Name_2015+Count_of_Name_2016) as TotalCountofNames FROM final;&quot;)</code></pre>
 <pre><code>##   TotalCountofNames
 ## 1           7239231</code></pre>
-<pre class="r"><code>head(final, 10)</code></pre>
+<pre class="r"><code>#Show table
+head(final, 10)</code></pre>
 <pre><code>##        Name Gender Count_of_Name_2015 Count_of_Name_2016 Total
 ## 1      Emma      F              20415              19414 39829
 ## 2    Olivia      F              19638              19246 38884
@@ -299,7 +309,8 @@ sqldf(&quot;Select SUM(Count_of_Name_2015+Count_of_Name_2016) as TotalCountofNam
 <li>Show top 10 female names</li>
 </ol></li>
 </ol>
-<pre class="r"><code>final_Top10_female_names &lt;- sqldf(&quot;Select 
+<pre class="r"><code>#Find top 10 female names
+final_Top10_female_names &lt;- sqldf(&quot;Select 
                         Name,
                         Count_of_Name_2015+Count_of_Name_2016 as Total
                         FROM final

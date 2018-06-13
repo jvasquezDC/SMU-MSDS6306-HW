@@ -23,6 +23,8 @@ library(proto)
 
 #Read in the yob2016.txt data set
 df <- read.table("yob2016.txt", header = FALSE, sep = ";", strip.white = TRUE)
+
+#Rename column names
 colnames(df)[colnames(df)=='V1'] <- 'Name'
 colnames(df)[colnames(df)=='V2'] <- 'Gender'
 colnames(df)[colnames(df)=='V3'] <- 'Count_of_Name'
@@ -56,9 +58,12 @@ sqldf("Select *
 1.   Data Munging
     d.   Remove the misspelled names from the data and assign the table as 'y2016'
 ```{r munging, echo=TRUE}
+#Delete mispelled name from data
 y2016 <- df[!(df$Name=="Fionayyy"),]
+
 #Show dimensions before row is deleted
 dim(df)
+
 #Show dimensions after row is deleted
 dim(y2016)
 ```
@@ -66,7 +71,10 @@ dim(y2016)
 2.   Data Merging
     a.   Import 'yob2015.txt' and assign column names and assign as 'y2015'
 ```{r import_yob2015, echo=TRUE}
+#Read in yob2015.txt
 y2015 <- read.table("yob2015.txt", header = FALSE, sep = ",", strip.white = TRUE)
+
+#Rename column names
 colnames(y2015)[colnames(y2015)=='V1'] <- 'Name'
 colnames(y2015)[colnames(y2015)=='V2'] <- 'Gender'
 colnames(y2015)[colnames(y2015)=='V3'] <- 'Count_of_Name'
@@ -79,6 +87,7 @@ head(y2015, 2)
 2.   Data Merging
     b.   Display last 10 rows of 'y2015' and describe what you see
 ```{r Display_last_10, echo=TRUE}
+#Display last 10 rows
 tail(y2015,10)
 
 #They are all males and have 5 obs each
@@ -94,6 +103,7 @@ final <- merge(y2015, y2016, by.x=c("Name","Gender"), by.y=c("Name","Gender"), a
 colnames(final)[colnames(final)=='Count_of_Name.x'] <- 'Count_of_Name_2015'
 colnames(final)[colnames(final)=='Count_of_Name.y'] <- 'Count_of_Name_2016'
 
+#Show table
 head(final, 2)
 ```
 
@@ -114,12 +124,15 @@ final <- sqldf("Select
 
 #Report sum total names
 sqldf("Select SUM(Count_of_Name_2015+Count_of_Name_2016) as TotalCountofNames FROM final;")
+
+#Show table
 head(final, 10)
 ```
 
 3.   Data Summary
     c.   Show top 10 female names
 ```{r Top10_female_names, echo=TRUE}
+#Find top 10 female names
 final_Top10_female_names <- sqldf("Select 
                         Name,
                         Count_of_Name_2015+Count_of_Name_2016 as Total
