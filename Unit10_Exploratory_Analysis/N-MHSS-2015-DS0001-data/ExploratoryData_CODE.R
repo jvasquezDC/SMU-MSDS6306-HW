@@ -1,0 +1,156 @@
+library(sqldf)
+library(ggplot2)
+
+##############################################
+#####                          ###############
+#####                          ###############
+#####    Make State DB         ###############
+#####                          ###############
+##############################################
+
+#Create State DB data frame
+StateDB <- data.frame(state.name, state.abb, state.area, state.region)
+colnames(StateDB)[colnames(StateDB)=='state.name'] <- 'StateName'
+colnames(StateDB)[colnames(StateDB)=='state.abb'] <- 'StateAbrev'
+colnames(StateDB)[colnames(StateDB)=='state.area'] <- 'StateSize_mi2' #Data is in Square miles
+colnames(StateDB)[colnames(StateDB)=='state.region'] <- 'StateRegion'
+
+#Add district of Columbia to StateDB Data Frame
+DistrictColumbia <- data.frame("District of Columbia","DC", "68.34", "South")
+names(DistrictColumbia) <- c("StateName","StateAbrev", "StateSize_mi2", "StateRegion")
+StateDB <- rbind(StateDB, DistrictColumbia)
+
+#Read the data set
+load(file = "N-MHSS-2015-DS0001-data-r.rda")
+
+#Trim Function to remove leading and trailing white spacing
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+mh2015_puf$LST <- trim(mh2015_puf$LST)
+
+#######################################################
+####
+####   B. list unique state names from column LST
+####
+#######################################################
+
+#List unique state abbrevations order by State Abrev.
+#Showing only first 6 rows
+head(sqldf("Select distinct LST 
+      FROM mh2015_puf 
+      order by 1"))
+
+#######################################################
+####
+####   C. Filter data to only rows that are Mainland
+####
+#######################################################
+
+
+#adding a mainland vs non-mainland column
+mh2015_puf <- sqldf("SELECT *,
+      case 
+        when LST = 'AK' then 'NonMainland'
+        when LST = 'PR' then 'NonMainland'
+        when LST = 'HI' then 'NonMainland'
+        when LST = 'AS' then 'NonMainland'
+        when LST = 'FM' then 'NonMainland'
+        when LST = 'GU' then 'NonMainland'
+        when LST = 'MH' then 'NonMainland'
+        when LST = 'MP' then 'NonMainland'
+        when LST = 'PW' then 'NonMainland'
+        when LST = 'VI' then 'NonMainland'
+        when LST = 'AE' then 'NonMainland'
+        when LST = 'AA' then 'NonMainland'
+        when LST = 'AP' then 'NonMainland'
+        else 'Mainland' 
+        END AS 'StateType'
+      FROM mh2015_puf")
+
+#count of medical centers by state
+mh2015_puf_Mainland <- sqldf("select LST as StateAbrev, count(*) as CountOfCenters 
+                                  from mh2015_puf
+                                  WHERE StateType = 'Mainland'
+                                  group by LST
+                                  Order by 2 desc")
+
+#Add full State Name
+mh2015_puf_Mainland <- merge(mh2015_puf_Mainland, StateDB, by=("StateAbrev"))
+
+#Show top 6 rows
+head(mh2015_puf_Mainland)
+
+#######################################################
+####
+####   1D. Create bar chart
+####
+#######################################################
+
+#Create bar plot of total medical centers by state
+ggplot(data=mh2015_puf_Mainland, 
+       aes(x=reorder(StateName, CountOfCenters), #order the bars by value
+           y=CountOfCenters,
+           fill=StateName)) +  #color the bars by state name
+      geom_bar(stat="identity")+
+      theme(legend.position="none",   #Remove the legend
+            plot.title=element_text(hjust=0.5)) +  #center the title
+      coord_flip()+
+      labs(x="State",
+           y="Number of Medical Centers",
+           title = "Total Counts of VA Medical Centers by State")
+
+#######################################################
+####
+####   1. Add state attributes
+####
+#######################################################
+
+
+
+#######################################################
+####
+####   1A & B. TidyData and Join to StateDB
+####
+#######################################################
+#Add square miles and region
+#mh2015_puf_Mainland <- merge(mh2015_puf_Mainland, StateDB, by=("StateAbrev"))
+
+#Tiday data: Please refer to trim function
+
+#######################################################
+####
+####   1C. Calculate new variable hospitals per 1K square miles
+####
+#######################################################
+
+mh2015_puf_Mainland <- sqldf("SELECT *,
+                                  CountOfCenters/(StateSize_mi2/1000.0) as VA_CenterDensity
+                                  FROM mh2015_puf_Mainland")
+head(mh2015_puf_Mainland)
+
+
+#Create bar plot of total medical centers by state
+ggplot(data=mh2015_puf_Mainland, 
+       aes(x=reorder(StateName, VA_CenterDensity), #order the bars by value
+           y=VA_CenterDensity,
+           fill=StateRegion)) +  #color the bars by state name
+  geom_bar(stat="identity")+
+  theme(plot.title=element_text(hjust=0.5)) +  #center the title
+  coord_flip()+
+  labs(x="State",
+       y="Hospital Density per 1K mi^2",
+       title = "VA Hospital Denisty per 1K mi^2")
+
+#Removing DC from the DataSet
+mh2015_puf_Mainland_NoDC <- mh2015_puf_Mainland[!(mh2015_puf_Mainland$StateAbrev=="DC"),]
+
+#Plotting the data without DC
+ggplot(data=mh2015_puf_Mainland_NoDC, 
+       aes(x=reorder(StateName, VA_CenterDensity), #order the bars by value
+           y=VA_CenterDensity,
+           fill=StateRegion)) +  #color the bars by state name
+  geom_bar(stat="identity")+
+  theme(plot.title=element_text(hjust=0.5)) +  #center the title
+  coord_flip()+
+  labs(x="State",
+       y="Hospital Density per 1K mi^2",
+       title = "VA Hospital Denisty per 1K mi^2")
